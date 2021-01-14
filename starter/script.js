@@ -63,7 +63,7 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
-// LECTURES
+// LECTUREs
 
 const currencies = new Map([
   ['USD', 'United States dollar'],
@@ -73,4 +73,67 @@ const currencies = new Map([
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
+
+
+
+
+// logic
+
 /////////////////////////////////////////////////
+
+
+// Displaying Transactions
+
+const displayMovements = function (movements) {
+  containerMovements.innerHTML = '';
+
+  movements.forEach(function (movement, i) {
+    const type = movement > 0 ? 'deposit' : 'withdrawal';
+
+    const html = `
+    <div class="movements__row">
+      <div class="movements__type movements__type--${type}">${i + 1}  ${type}</div>
+      <div class="movements__value">${movement}</div>
+    </div>    
+    `;
+
+
+    containerMovements.insertAdjacentHTML('afterbegin', html)
+  })
+};
+// Testing
+displayMovements(account1.movements)
+
+
+
+
+// Creating username variable to each user
+
+const createUsername = function (users) {
+  users.forEach(function (user) {
+    user.username = (user.owner.toLowerCase().split(' ').map(name => name[0]).join(''))
+  })
+}
+// Testing
+createUsername(accounts)
+
+
+
+
+// Creating a function to print balance
+
+
+const calcBalance = function (accounts) {
+  accounts.forEach(function (user) {
+    user.total = user.movements.reduce(function (acc, cur) {
+      return acc + cur
+    })
+
+  })
+}
+
+
+calcBalance(accounts);
+console.log(accounts)
+
+// s
