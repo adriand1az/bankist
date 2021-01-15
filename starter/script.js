@@ -6,31 +6,31 @@
 
 // Data
 const account1 = {
-  owner: 'Jonas Schmedtmann',
-  movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
-  interestRate: 1.2, // %
-  pin: 1111,
+	owner: 'Jonas Schmedtmann',
+	movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
+	interestRate: 1.2, // %
+	pin: 1111,
 };
 
 const account2 = {
-  owner: 'Jessica Davis',
-  movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
-  interestRate: 1.5,
-  pin: 2222,
+	owner: 'Jessica Davis',
+	movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
+	interestRate: 1.5,
+	pin: 2222,
 };
 
 const account3 = {
-  owner: 'Steven Thomas Williams',
-  movements: [200, -200, 340, -300, -20, 50, 400, -460],
-  interestRate: 0.7,
-  pin: 3333,
+	owner: 'Steven Thomas Williams',
+	movements: [200, -200, 340, -300, -20, 50, 400, -460],
+	interestRate: 0.7,
+	pin: 3333,
 };
 
 const account4 = {
-  owner: 'Sarah Smith',
-  movements: [430, 1000, 700, 50, 90],
-  interestRate: 1,
-  pin: 4444,
+	owner: 'Sarah Smith',
+	movements: [430, 1000, 700, 50, 90],
+	interestRate: 1,
+	pin: 4444,
 };
 
 const accounts = [account1, account2, account3, account4];
@@ -66,9 +66,9 @@ const inputClosePin = document.querySelector('.form__input--pin');
 // LECTUREs
 
 const currencies = new Map([
-  ['USD', 'United States dollar'],
-  ['EUR', 'Euro'],
-  ['GBP', 'Pound sterling'],
+	['USD', 'United States dollar'],
+	['EUR', 'Euro'],
+	['GBP', 'Pound sterling'],
 ]);
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
@@ -84,32 +84,32 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 // Displaying Transactions
 const displayMovements = function (movements) {
-  containerMovements.innerHTML = '';
+	containerMovements.innerHTML = '';
 
-  movements.forEach(function (movement, i) {
-    const type = movement > 0 ? 'deposit' : 'withdrawal';
+	movements.forEach(function (movement, i) {
+		const type = movement > 0 ? 'deposit' : 'withdrawal';
 
-    const html = `
-    <div class="movements__row">
-      <div class="movements__type movements__type--${type}">${i + 1}  ${type}</div>
-      <div class="movements__value">${movement}</div>
-    </div>    
-    `;
+		const html = `
+		<div class="movements__row">
+		<div class="movements__type movements__type--${type}">${i + 1}  ${type}</div>
+		<div class="movements__value">${movement}</div>
+		</div>    
+		`;
 
 
-    containerMovements.insertAdjacentHTML('afterbegin', html)
-  })
+		containerMovements.insertAdjacentHTML('afterbegin', html)
+	})
 };
-displayMovements(account1.movements)
+
 
 
 
 
 // Creating username variable to each user
 const createUsername = function (users) {
-  users.forEach(function (user) {
-    user.username = (user.owner.toLowerCase().split(' ').map(name => name[0]).join(''))
-  })
+	users.forEach(function (user) {
+		user.username = (user.owner.toLowerCase().split(' ').map(name => name[0]).join(''))
+	})
 }
 // Testing
 createUsername(accounts)
@@ -119,12 +119,12 @@ createUsername(accounts)
 
 // Creating a function to calculate Total
 const calcDisplayBalance = function (movements) {
-  const balance = movements.reduce((acc, mov) => acc + mov);
+	const balance = movements.reduce((acc, mov) => acc + mov);
 
-  labelBalance.textContent = `${balance}`
+	labelBalance.textContent = `${balance}`
 }
 // Total
-calcDisplayBalance(account1.movements)
+
 
 const eurToUsd = 1.1;
 
@@ -132,25 +132,39 @@ const eurToUsd = 1.1;
 
 
 const calcDisplaySummary = function (movements) {
-  // Labels income coming in
-  const incomes = movements.filter(num => num > 0).reduce((acc, num) => acc + num)
-  labelSumIn.innerText = `$${incomes}`;
+	// Labels income coming in
+	const incomes = movements.filter(num => num > 0).reduce((acc, num) => acc + num)
+	labelSumIn.innerText = `$${incomes}`;
 
-  // labels money leaving account
-  const out = movements.filter(num => num < 0).reduce((acc, num) => acc + num)
-  labelSumOut.innerText = `$${Math.abs(out)}`
+	// labels money leaving account
+	const out = movements.filter(num => num < 0).reduce((acc, num) => acc + num)
+	labelSumOut.innerText = `$${Math.abs(out)}`
 
-  const interest = movements.filter(num => num > 0)
-    .map(deposit => deposit * 1.2 / 100)
-    .filter((int, i, arr) => int >= 1)
-    .reduce(((acc, int) => acc + int));
+	const interest = movements.filter(num => num > 0)
+		.map(deposit => deposit * 1.2 / 100)
+		.filter((int, i, arr) => int >= 1)
+		.reduce(((acc, int) => acc + int));
 
-  labelSumInterest.innerText = `$${interest}`;
+	labelSumInterest.innerText = `$${interest}`;
 }
 
-calcDisplaySummary(account1.movements)
+
 
 // Event listeners
-btnLogin.addEventListener('click', function () {
-  console.log('LOGIN')
+btnLogin.addEventListener('click', function (e) {
+	e.preventDefault();
+
+	const currentAccount = accounts.find(acc => acc.username == inputLoginUsername.value);
+	console.log(currentAccount)
+
+	if (currentAccount?.pin === Number(inputLoginPin.value)) {
+		labelWelcome.textContent = `Welcome back, ${currentAccount.owner.split(' ')[0]}`;
+		containerApp.style.opacity = 1;
+
+		// 
+		displayMovements(currentAccount.movements)
+		calcDisplaySummary(currentAccount.movements)
+		calcDisplayBalance(currentAccount.movements)
+	}
 })
+
