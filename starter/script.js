@@ -193,3 +193,24 @@ btnTransfer.addEventListener('click', function (e) {
 
 	}
 })
+
+btnClose.addEventListener('click', function (e) {
+	e.preventDefault();
+	let closeUser = inputCloseUsername.value;
+	let closePin = Number(inputClosePin.value);
+
+	if (closeUser === currentAccount.username && closePin === currentAccount.pin) {
+		const index = accounts.findIndex(
+			acc => acc.username === currentAccount.username
+		);
+
+		console.log(index)
+
+		accounts.splice(index, 1);
+		console.log(accounts)
+		// accounts.splice(index, 1);
+
+		containerApp.style.opacity = 0;
+	}
+	inputCloseUsername.value = inputClosePin.value = '';
+})
