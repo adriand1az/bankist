@@ -245,3 +245,6 @@ btnSort.addEventListener('click', function (e) {
 	displayMovements(currentAccount.movements, !sorted)
 	sorted = !sorted
 })
+
+// const randomList = Array.from({ length: 100 }, () => Math.trunc(Math.random() * 6) + 1)
+// console.log(randomList)
