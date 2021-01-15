@@ -82,10 +82,12 @@ const currencies = new Map([
 
 
 // Displaying Transactions
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
 	containerMovements.innerHTML = '';
 
-	movements.forEach(function (movement, i) {
+	const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+
+	movs.forEach(function (movement, i) {
 		const type = movement > 0 ? 'deposit' : 'withdrawal';
 
 		const html = `
@@ -229,4 +231,17 @@ btnClose.addEventListener('click', function (e) {
 		containerApp.style.opacity = 0;
 	}
 	inputCloseUsername.value = inputClosePin.value = '';
+})
+
+
+// Gathering total bank money
+
+const overAllBalance = accounts.flatMap(acc => acc.movements).reduce((acc, cur) => acc + cur)
+console.log(overAllBalance)
+
+let sorted = false;
+btnSort.addEventListener('click', function (e) {
+	e.preventDefault();
+	displayMovements(currentAccount.movements, !sorted)
+	sorted = !sorted
 })
