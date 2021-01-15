@@ -71,7 +71,6 @@ const currencies = new Map([
 	['GBP', 'Pound sterling'],
 ]);
 
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 
 
@@ -193,6 +192,23 @@ btnTransfer.addEventListener('click', function (e) {
 
 	}
 })
+
+
+btnLoan.addEventListener('click', function (e) {
+	e.preventDefault();
+
+	const loanAmount = Number(inputLoanAmount.value);
+
+	if (loanAmount > 0 && currentAccount.movements.some(movement => loanAmount <= movement / 10)) {
+		currentAccount.movements.push(loanAmount)
+
+		// update
+		updateUI(currentAccount)
+	}
+
+	inputLoanAmount.value = '';
+})
+
 
 btnClose.addEventListener('click', function (e) {
 	e.preventDefault();
