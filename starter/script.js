@@ -83,7 +83,6 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 
 // Displaying Transactions
-
 const displayMovements = function (movements) {
   containerMovements.innerHTML = '';
 
@@ -101,14 +100,12 @@ const displayMovements = function (movements) {
     containerMovements.insertAdjacentHTML('afterbegin', html)
   })
 };
-// Testing
 displayMovements(account1.movements)
 
 
 
 
 // Creating username variable to each user
-
 const createUsername = function (users) {
   users.forEach(function (user) {
     user.username = (user.owner.toLowerCase().split(' ').map(name => name[0]).join(''))
@@ -120,20 +117,40 @@ createUsername(accounts)
 
 
 
-// Creating a function to print balance
+// Creating a function to calculate Total
+const calcDisplayBalance = function (movements) {
+  const balance = movements.reduce((acc, mov) => acc + mov);
+
+  labelBalance.textContent = `${balance}`
+}
+// Total
+calcDisplayBalance(account1.movements)
+
+const eurToUsd = 1.1;
+
+// const totalDepositUsd = movements.filter(mov => mov > 0).map(mov => mov * eurToUsd).reduce((acc, mov) => acc + mov)
 
 
-const calcBalance = function (accounts) {
-  accounts.forEach(function (user) {
-    user.total = user.movements.reduce(function (acc, cur) {
-      return acc + cur
-    })
+const calcDisplaySummary = function (movements) {
+  // Labels income coming in
+  const incomes = movements.filter(num => num > 0).reduce((acc, num) => acc + num)
+  labelSumIn.innerText = `$${incomes}`;
 
-  })
+  // labels money leaving account
+  const out = movements.filter(num => num < 0).reduce((acc, num) => acc + num)
+  labelSumOut.innerText = `$${Math.abs(out)}`
+
+  const interest = movements.filter(num => num > 0)
+    .map(deposit => deposit * 1.2 / 100)
+    .filter((int, i, arr) => int >= 1)
+    .reduce(((acc, int) => acc + int));
+
+  labelSumInterest.innerText = `$${interest}`;
 }
 
+calcDisplaySummary(account1.movements)
 
-calcBalance(accounts);
-console.log(accounts)
-
-// s
+// Event listeners
+btnLogin.addEventListener('click', function () {
+  console.log('LOGIN')
+})
