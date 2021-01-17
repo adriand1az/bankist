@@ -7,10 +7,8 @@
 /////////////////////////////////////////////////
 // Data
 
-// DIFFERENT DATA! Contains movement dates, currency and locale
-
 const account1 = {
-	owner: 'Jonas Schmedtmann',
+	owner: 'Adrian Diaz',
 	movements: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
 	interestRate: 1.2, // %
 	pin: 1111,
@@ -25,8 +23,8 @@ const account1 = {
 		'2020-07-11T23:36:17.929Z',
 		'2020-07-12T10:51:36.790Z',
 	],
-	currency: 'EUR',
-	locale: 'pt-PT', // de-DE
+	currency: 'USD',
+	locale: 'en-US', // de-DE
 };
 
 const account2 = {
@@ -49,7 +47,27 @@ const account2 = {
 	locale: 'en-US',
 };
 
-const accounts = [account1, account2];
+const account3 = {
+	owner: 'Guest User',
+	movements: [200, 455.23, -68, 38000, 642.21, -190.9, 180.65, -1900],
+	interestRate: 1.2, // %
+	pin: 3333,
+
+	movementsDates: [
+		'2019-11-18T21:31:17.178Z',
+		'2019-12-23T07:42:02.383Z',
+		'2020-01-28T09:15:04.904Z',
+		'2020-04-01T10:17:24.185Z',
+		'2020-05-08T14:11:59.604Z',
+		'2020-05-27T17:01:17.194Z',
+		'2020-06-11T23:36:17.929Z',
+		'2021-01-12T10:51:36.790Z',
+	],
+	currency: 'EUR',
+	locale: 'pt-PT', // de-DE
+};
+
+const accounts = [account1, account2, account3];
 
 /////////////////////////////////////////////////
 // Elements
@@ -64,6 +82,7 @@ const labelTimer = document.querySelector('.timer');
 const containerApp = document.querySelector('.app');
 const containerMovements = document.querySelector('.movements');
 
+const btnDemo = document.querySelector('.demo__btn')
 const btnLogin = document.querySelector('.login__btn');
 const btnTransfer = document.querySelector('.form__btn--transfer');
 const btnLoan = document.querySelector('.form__btn--loan');
@@ -100,7 +119,7 @@ const displayMovements = function (acc, sort = false) {
         <div class="movements__type movements__type--${type}">${i + 1
 			} ${type}</div>
       <div class="movements__date">${displayDate}</div>
-        <div class="movements__value">${mov.toFixed(2)}€</div>
+        <div class="movements__value">$${mov.toFixed(2)}</div>
       </div>
     `;
 
@@ -110,19 +129,19 @@ const displayMovements = function (acc, sort = false) {
 
 const calcDisplayBalance = function (acc) {
 	acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-	labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
+	labelBalance.textContent = `$${acc.balance.toFixed(2)}`;
 };
 
 const calcDisplaySummary = function (acc) {
 	const incomes = acc.movements
 		.filter(mov => mov > 0)
 		.reduce((acc, mov) => acc + mov, 0);
-	labelSumIn.textContent = `${incomes.toFixed(2)}€`;
+	labelSumIn.textContent = `$${incomes.toFixed(2)}`;
 
 	const out = acc.movements
 		.filter(mov => mov < 0)
 		.reduce((acc, mov) => acc + mov, 0);
-	labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
+	labelSumOut.textContent = `$${Math.abs(out).toFixed(2)}`;
 
 	const interest = acc.movements
 		.filter(mov => mov > 0)
@@ -132,7 +151,7 @@ const calcDisplaySummary = function (acc) {
 			return int >= 1;
 		})
 		.reduce((acc, int) => acc + int, 0);
-	labelSumInterest.textContent = `${interest.toFixed(2)}€`;
+	labelSumInterest.textContent = `$${interest.toFixed(2)}`;
 };
 
 const createUsernames = function (accs) {
@@ -197,6 +216,32 @@ const startLogOutTimer = function () {
 
 	return timer;
 }
+
+btnDemo.addEventListener('click', function(e){
+	e.preventDefault();
+	currentAccount = account3;
+	
+	labelWelcome.textContent = `Welcome back, ${currentAccount.owner.split(' ')[0]}`;
+	
+			containerApp.style.opacity = 100;
+			// Creating current date
+			const now = new Date();
+			const day = `${now.getDate()}`.padStart(2, 0);
+			const month = `${now.getMonth() + 1}`.padStart(2, 0);
+			const year = now.getFullYear()
+			labelDate.textContent = `${month}/ ${day}/${year}`;
+	
+			// Clear input fields
+			inputLoginUsername.value = inputLoginPin.value = '';
+			inputLoginPin.blur();
+	
+			// Start logout time	
+			if (timer) clearInterval(timer);
+			timer = startLogOutTimer();
+	
+			// Update UI
+			updateUI(currentAccount);
+})
 
 btnLogin.addEventListener('click', function (e) {
 	// Prevent form from submitting
@@ -316,17 +361,5 @@ btnSort.addEventListener('click', function (e) {
 	displayMovements(currentAccount.movements, !sorted);
 	sorted = !sorted;
 });
-
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-// LECTURES
-
-
-console.log(parseInt('23.6'))
-
-// creating dates
-
-
-// Schedules this function call for three seconds later
 
 
